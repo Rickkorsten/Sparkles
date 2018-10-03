@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+import axios from 'axios';
 import { GiftedChat } from 'react-native-gifted-chat'
 
 export default class ChatsScreen extends Component {
@@ -12,25 +13,16 @@ export default class ChatsScreen extends Component {
 
     componentWillMount() {
         this.setState({
-          messages: [
-            {
-              _id: 1,
-              text: 'Hello developer',
-              createdAt: new Date(),
-              user: {
-                _id: 2,
-                name: 'React Native',
-                avatar: 'https://placeimg.com/140/140/any',
-              },
-            },
-          ],
+          messages: [],
         })
       }
 
     onSend(messages = []) {
-        this.setState(previousState => ({
-          messages: GiftedChat.append(previousState.messages, messages),
-        }))
+      axios.post(`https://jsonplaceholder.typicode.com/users`, { user })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+      })
     }
     
 

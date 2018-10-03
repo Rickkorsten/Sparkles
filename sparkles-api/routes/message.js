@@ -2,15 +2,33 @@ const turbo = require('turbo360')({site_id: process.env.TURBO_APP_ID})
 const vertex = require('vertex360')({site_id: process.env.TURBO_APP_ID})
 const router = vertex.router()
 
-const User = require('../models/Message');
+const Message = require('../models/Message');
 
-router.post('/user', (req, res) =>{
+router.get('/message', (req, res) => {
 
-	User.create(req.body)
-	.then(user => {
+	Message.find()
+	.then(message => {
+		res.json({
+			confirmation: 'gelukt',
+			data: message
+		})
+	})
+	.catch(err => {
+		res.json({
+			confirmation: 'mislukt',
+			data: err.message
+		})
+	})
+
+})
+
+router.post('/message', (req, res) =>{
+
+	Message.create(req.body)
+	.then(message => {
 		res.json({
 			confirmation: 'succes',
-			data: user
+			data: message
 		})
 	})
 	.catch(err => {
@@ -20,3 +38,5 @@ router.post('/user', (req, res) =>{
 		})
 	})
 })
+
+module.exports = router

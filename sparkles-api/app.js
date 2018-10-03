@@ -22,13 +22,13 @@ const app = vertex.app(config) // initialize app with config options
 const index = require('./routes/index')
 const user = require('./routes/user')
 const message = require('./routes/message')
-const relation = require('./routes/relation')
+// const relation = require('./routes/relation')
 
 // set routes
 app.use('/', index)
 app.use('/api', user) // user route
 app.use('/api', message) // message route
-app.use('/api', relation) // message route
+// app.use('/api', relation) // message route
 
 
 module.exports = app
