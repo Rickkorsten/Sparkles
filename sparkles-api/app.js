@@ -1,34 +1,32 @@
-// Full Documentation - https://www.turbo360.co/docs
-const vertex = require('vertex360')({site_id: process.env.TURBO_APP_ID})
-
-const config = {
-	views: 'views', 		// Set views directory 
-	static: 'public', 		// Set static assets directory
-	db: { 					// Database configuration. Remember to set env variables in .env file: MONGODB_URI, PROD_MONGODB_URI
-		url: (process.env.TURBO_ENV=='dev') ? process.env.MONGODB_URI : process.env.PROD_MONGODB_URI,
-		type: 'mongo',
-		onError: (err) => {
-			console.log('DB Connection Failed!')
-		},
-		onSuccess: () => {
-			console.log('DB Successfully Connected!')
-		}
-	}
-}
-
-const app = vertex.app(config) // initialize app with config options
+const express = require('express');
+const app = express();
+const morgan = require('morgan');
 
 // import routes
-const index = require('./routes/index')
-const user = require('./routes/user')
-const message = require('./routes/message')
-// const relation = require('./routes/relation')
+const userRoutes = require('./api/routes/user');
+const messageRoutes = require('./api/routes/message');
+const relationRoutes = require('./api/routes/relation');
+
+app.use(morgan('dev'));
 
 // set routes
-app.use('/', index)
-app.use('/api', user) // user route
-app.use('/api', message) // message route
-// app.use('/api', relation) // message route
+app.use('/user', userRoutes); // user route
+app.use('/message', messageRoutes); // message route
+app.use('/relation', relationRoutes); // message route
 
+app.use((req, res, next) => {
+	const error = new Error('Not found!!!');
+	error.status(404);
+	next(error);
+})
+
+app.use((error, req, res, next) => {
+	res.status(err.status || 500);
+	res.json({
+		error: {
+			message: error.message
+		}
+	})
+})
 
 module.exports = app

@@ -1,10 +1,10 @@
-const turbo = require('turbo360')({site_id: process.env.TURBO_APP_ID})
-const vertex = require('vertex360')({site_id: process.env.TURBO_APP_ID})
-const router = vertex.router()
+const express = require('express');
+const router = express.Router()
 
-const Message = require('../models/Message');
+const Message = require('../../models/Message');
 
-router.get('/message', (req, res) => {
+
+router.get('/', (req, res, next) => {
 
 	Message.find()
 	.then(message => {
@@ -22,7 +22,7 @@ router.get('/message', (req, res) => {
 
 })
 
-router.post('/message', (req, res) =>{
+router.post('/', (req, res, next) =>{
 
 	Message.create(req.body)
 	.then(message => {
