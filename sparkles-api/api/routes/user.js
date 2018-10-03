@@ -90,9 +90,14 @@ router.get('/:id', (req, res, next) => {
 	}
 })
 
-router.post('/', (req, res, next) =>{
-	res.status(200).json({
-		message: "handling get request to user"
+router.post('/', (req, res, next) => {
+	const user = {
+		userName: req.body.userName,
+		age: req.body.age
+	}
+	res.status(201).json({
+		message: "handling get request to user",
+		user: user
 	})
 	// User.create(req.body)
 	// .then(user => {
