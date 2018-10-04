@@ -1,7 +1,8 @@
 const express = require('express');
-const router = express.Router()
+const router = express.Router();
+const mongoose = require('mongoose');
 
-const Message = require('../../models/Message');
+const Message = require('../models/Message');
 
 
 router.get('/', (req, res, next) => {
@@ -24,19 +25,30 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) =>{
 
-	Message.create(req.body)
-	.then(message => {
-		res.json({
-			confirmation: 'succes',
-			data: message
-		})
+	const message = new Message({
+		_id: new mongoose.Types.ObjectId(),
+		sender: req.body.sender,
+		message: req.body.message,
+		//date_send: new Date(),
+		relation_id: req.body.relation_id,
 	})
-	.catch(err => {
-		res.json({
-			confirmation: 'mislukt',
-			data: err.message
-		})
+	message.save().then(result => {
+		console.log(result)
 	})
+	.catch(err => console.log(err));
+	// Message.create(req.body)
+	// .then(message => {
+	// 	res.json({
+	// 		confirmation: 'succes',
+	// 		data: message
+	// 	})
+	// })
+	// .catch(err => {
+	// 	res.json({
+	// 		confirmation: 'mislukt',
+	// 		data: err.message
+	// 	})
+	// })
 })
 
 module.exports = router

@@ -2,11 +2,24 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose')
 
 // import routes
 const userRoutes = require('./api/routes/user');
 const messageRoutes = require('./api/routes/message');
 const relationRoutes = require('./api/routes/relation');
+
+// connect mongoose
+mongoose.connect('mongodb+srv://tom:rickandmorty@sparkapi-vk9px.gcp.mongodb.net/test?retryWrites=true', 
+	{ useNewUrlParser: true }
+).then(
+	() => {
+	  console.log("Database connection established!");
+	},
+	err => {
+	  console.log("Error connecting Database instance due to: ", err);
+	}
+   );
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));

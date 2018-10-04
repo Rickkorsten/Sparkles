@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router()
 
-const Relation = require('../../models/Relation');
+const Relation = require('../models/Relation');
 
 router.get('/', (req, res, next) => {
 
