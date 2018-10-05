@@ -20,6 +20,7 @@ mongoose.connect('mongodb+srv://tom:rickandmorty@sparkapi-vk9px.gcp.mongodb.net/
 	  console.log("Error connecting Database instance due to: ", err);
 	}
    );
+mongoose.Promise = global.Promise;
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
