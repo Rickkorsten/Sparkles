@@ -54,7 +54,7 @@ router.post('/login', (req, res, next) => {
 					username: user[0].username,
 					userId: user[0]._id
 				},
-					process.env.JWT_KEY,
+					'abradolf', // has to link to process.env.JWT_KEY
 					{
 						expiresIn: "1h",
 					},

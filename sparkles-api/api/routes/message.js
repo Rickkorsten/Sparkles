@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-
+const checkAuth = require('../auth/check-auth');
 const Message = require('../models/Message');
 
 
@@ -37,13 +37,13 @@ router.get('/', (req, res, next) => {
 		})
 
 })
-
-router.post('/', (req, res, next) => {
+// protected route
+router.post('/', checkAuth, (req, res, next) => {
 	// template of item to store
 	const message = new Message({
 		_id: new mongoose.Types.ObjectId(),
 		sender: req.body.sender,
-		message: req.body.message,
+	 	message: req.body.message,
 		date_send: new Date(),
 		relation_id: req.body.relation_id,
 	})
