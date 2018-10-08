@@ -7,7 +7,7 @@ router.post('/', relationController.relation_create);
 router.delete('/:relation_id', relationController.relation_delete);
 router.patch('/:relation_id', relationController.relation_update);
 router.get('/relation/:relation_id', relationController.relation_messages); // get all messages of relation
-router.get('/active_relation/:user_id', relationController.relation_passed); // get passed relation
+router.get('/passed_relation/:user_id', relationController.relation_passed); // get passed relation
 router.get('/active_relation/:user_id', relationController.relation_active); // get active relation
 
 //  The way to update in Postman!!
