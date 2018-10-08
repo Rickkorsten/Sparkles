@@ -46,6 +46,47 @@ router.post('/', (req, res, next) => {
 			})
 		});
 })
+
+router.delete('/:relation_id', (req, res, next) => {
+	const id = req.params.relation_id
+
+	Relation.remove({ _id: id })
+		.exec()
+		.then(result => {
+			res.status(200).json({
+				message: 'relation deleted!'
+			})
+		})
+		.catch(err => {
+			res.status(500).json({ error: err })
+		})
+})
+
+router.patch('/:relation_id', (req, res, next) => {
+	const id = req.params.relation_id
+	const updateOps = {}
+
+	for (const ops of req.body) {
+		updateOps[ops.propName] = ops.value
+	}
+
+	Relation.update({ _id: id }, { $set: updateOps })
+		.exec()
+		.then(result => {
+			res.status(200).json({
+				message: 'relation updated!',
+				result: result
+			 })
+		})
+		.catch(err => {
+			res.status(500).json({ error: err })
+		})
+})
+
+// [ the way to update
+// 	{ "propName" : "status", "value": "active" }
+// ]
+
 // get all messages of relation
 router.get('/relation/:relation_id', (req, res, next) => {
 	const relation_id = req.params.relation_id;
@@ -75,7 +116,7 @@ router.get('/active_relation/:user_id', (req, res, next) => {
 	Relation.find()
 		.or([{ first_user_id: user_id }, { second_user_id: user_id }])
 		.where('status', 'active')
-		.select('relation_id') // define what lines you should see in the response object
+		//.select('relation_id') // define what lines you should see in the response object
 		.exec()
 		.then(relation => {
 			res.status(200).json({
