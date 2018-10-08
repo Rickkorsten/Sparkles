@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const checkAuth = require('../auth/check-auth');
-const Message = require('../models/Message');
 
 const messageController = require('../controllers/message')
 
