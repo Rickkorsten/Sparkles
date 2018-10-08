@@ -1,33 +1,69 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, './upload')
+	},
+	filename: function (req, file, cb) {
+		cb(null, Date.now() + '-' +file.originalname)
+	}
+})
+
+const fileFilter = (req, file, cb) => {
+	// reject a file
+	if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+		cb(null, true);
+	} else {
+		cb(null, false);
+	}
+}
+
+const upload = multer({
+	storage: storage, 
+	limits: {
+		fileSize: 1024 * 1024 * 5
+	},
+	fileFilter: fileFilter
+});
+
 //const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 
-router.post("/signup", (req, res, next) => {
-	User.find().or([{ username: req.body.username }, { device_id: req.body.device_id }]).exec()
+router.post("/signup", upload.single('userImage'), (req, res, next) => {
+	console.log(req.file)
+	User.find({ device_id: req.body.device_id }).exec()
 		.then(user => {
 			if (user.length >= 1) {
 				res.status(409).json({
-					message: 'Username already exist or phone is already in our database'
+					message: 'phone is already in our database, you cant create multiple account'
 				})
 			} else {
 				const user = new User({
 					_id: new mongoose.Types.ObjectId(),
 					personal_details_id: new mongoose.Types.ObjectId(),
 					interest_id: new mongoose.Types.ObjectId(),
-					username: req.body.username,
+					firstName: req.body.firstName,
+					lastName: req.body.lastName,
 					device_id: req.body.device_id,
 					sex: req.body.sex,
 					preference: req.body.preference,
+					userImage: req.file.path
 				})
 				user.save()
 					.then(result => {
 						console.log(result)
 						res.status(201).json({
-							message: 'user created'
+							User: result
+							// request: {
+							// 	type: 'GET personal ',
+							// 	description: 'GET_THIS_MESSAGES',
+							// 	url: 'http://localhost:3000/message/' + result._id,
+							// }
 						})
 					})
 					.catch(err => {
@@ -41,20 +77,21 @@ router.post("/signup", (req, res, next) => {
 })
 
 router.post('/login', (req, res, next) => {
-	User.find({ username: req.body.username })
+	User.find({ device_id: req.body.device_id })
 		.exec()
 		.then(user => {
+			console.log("de usertttttt " + user[0]);
 			if (user.length < 1) {
 				return res.status(401).json({
-					message: 'auth failed',
+					message: 'auth failed!!',
 				});
 			}
-			if (user[0].device_id == req.body.device_id) {
+			if (user[0].lastName == req.body.lastName) {
 				const token = jwt.sign({
-					username: user[0].username,
+					lastName: user[0].lastName,
 					userId: user[0]._id
 				},
-					'abradolf', // has to link to process.env.JWT_KEY
+					process.env.JWT_KEY,
 					{
 						expiresIn: "1h",
 					},

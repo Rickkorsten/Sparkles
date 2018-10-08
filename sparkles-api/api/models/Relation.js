@@ -6,8 +6,7 @@ const Relation = mongoose.Schema({
     second_user_id: { type: mongoose.Schema.Types.ObjectId, require: true, },
     start_date: { type: Date, require: true, },
     progress: { type: Number, require: true, },
-    status: { type: String, require: true, },
-    messages: { type: Array },
+    status: { type: String, require: true, }
 })
 module.exports = mongoose.model('Relation', Relation)
  
