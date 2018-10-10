@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 const userRoutes = require('./api/routes/user');
 const messageRoutes = require('./api/routes/message');
 const relationRoutes = require('./api/routes/relation');
+const matchingRoutes = require('./api/routes/matching');
 
 // connect mongoose
 mongoose.connect('mongodb+srv://tom:rickandmorty@sparkapi-vk9px.gcp.mongodb.net/test?retryWrites=true', 
@@ -44,6 +45,7 @@ app.use((req, res, next) => {
 app.use('/user', userRoutes); // user route 
 app.use('/message', messageRoutes); // message route
 app.use('/relation', relationRoutes); // message route
+app.use('/matching', matchingRoutes); // matching route
 
 app.use((req, res, next) => {
 	const error = new Error('Not found!!!');

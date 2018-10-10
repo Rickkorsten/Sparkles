@@ -13,5 +13,7 @@ router.get('/active_relation/:user_id', relationController.relation_active); // 
 //  The way to update in Postman!!
 // 	[{ "propName" : "status", "value": "active" }]
 
+// websocket implementeren.
+
 
 module.exports = router

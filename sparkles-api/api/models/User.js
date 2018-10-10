@@ -8,8 +8,11 @@ const User = mongoose.Schema({
     sex: { type: String, require: true, lowercase: true },
     preference: { type: String, require: true, lowercase: true },
     userImage: { type: String, require: true },
-    firstName: { type: String, require: true, lowercase: true },
-    lastName: { type: String, require: true, lowercase: true }
+    firstName: { type: String, require: true },
+    lastName: { type: String, require: true },
+    searching_spark: { type: Boolean, require: true, default: true },
+    succes_rate: { type: Number, require: true, default: 80 },
+    language: { type: String, require: true, default: 'dutch', lowercase: true }
 })
 module.exports = mongoose.model('User', User)
 
