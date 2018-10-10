@@ -16,8 +16,7 @@ const User = mongoose.Schema({
 })
 module.exports = mongoose.model('User', User)
 
-// image // still to add
-// relations_id [ ] // still to add
- // active_relation_id: { type: mongoose.Schema.Types.ObjectId, require: true, },
+// add creation_date
+// add date of birth
 
- // username for login and device_id ass password
+// if the date of birth known then create age_range example : 

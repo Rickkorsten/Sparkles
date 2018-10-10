@@ -1,57 +1,75 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import SocketIOClient from 'socket.io-client';
 import axios from 'axios';
-import { GiftedChat } from 'react-native-gifted-chat'
 
 export default class ChatsScreen extends Component {
-    constructor(props){
-        super(props);
-        state = {
-            message: 'message',
-            name: 'Rick Korsten'
-        }
-    }
 
-    componentWillMount() {
-    }
+  constructor(props) {
+    super(props);
+    this.socket = SocketIOClient('http://localhost:3000');
+  }
 
-    onSend() {
-        const message = {
-          sender: this.state.name,
-          message: this.state.message,
-          relation_id: 1365,
-          date_send: Date.now
-          
-        };
-        console.log(message)
-        axios.post(`https://sparkles-api-qxkx1f.turbo360-vertex.com/api/message`, message)
+  state = {
+    message: 'message',
+    name: 'Rick Korsten',
+    allMessages: [],
+  }
+
+
+  componentWillMount() {
+    axios.get('http://localhost:3000/relation/relation/12345678')
+      .then(result => {
+        this.setState({ allMessages: result.data.data });
+      })
+  }
+
+  onSend() {
+    const message = {
+      sender: this.state.name,
+      message: this.state.message,
+      relation_id: 12345678,
+      date_send: Date.now
+
+    };
+    console.log(message)
+    axios.post(`http://localhost:3000/message`, message)
       .then(res => {
         console.log(res);
-        console.log(res.data);
       }).catch(err => {
         console.log(err.message);
       })
-    }
+  }
 
-  updateField(text,field){
-    if (field == 'name'){
+  updateField(text, field) {
+    if (field == 'name') {
       console.log(text)
       this.setState({
-        name : text
+        name: text
       })
-    } else if (field == 'message'){
+    } else if (field == 'message') {
       this.setState({
-        message : text
+        message: text
       })
     }
   }
-    
+
 
   render() {
+    console.log(this.state.allMessages);
     return (
       <View style={styles.container}>
         <View style={styles.messageContainer}>
-
+          {
+            this.state.allMessages.map(message => {
+              return (
+                <View className="message">
+                  <Text>{message.sender}</Text>
+                  <Text>{message.message}</Text>
+                </View>
+              )
+            })
+          }
         </View>
         <View style={styles.inputContainer}>
           <TextInput
@@ -65,7 +83,7 @@ export default class ChatsScreen extends Component {
             onChangeText={(text) => this.updateField(text, 'message')}
           />
           <TouchableOpacity
-          onPress={()=>this.onSend()}
+            onPress={() => this.onSend()}
           >
             <Text>
               Send
@@ -78,9 +96,9 @@ export default class ChatsScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems:'center',
-      justifyContent:'center'
-    }
-  });
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+});

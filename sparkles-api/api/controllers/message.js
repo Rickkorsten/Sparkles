@@ -59,6 +59,7 @@ exports.message_create = (req, res, next) => {
 					}
 				}
 			})
+			io.emit('message', message);
 		})
 		.catch(err => {
 			res.status(500).json({
