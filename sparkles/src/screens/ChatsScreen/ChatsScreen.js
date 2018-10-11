@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import SocketIOClient from 'socket.io-client';
+import { connect } from 'react-redux';
 import axios from 'axios';
 
-export default class ChatsScreen extends Component {
+class ChatsScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -30,8 +31,10 @@ export default class ChatsScreen extends Component {
   }
 
   onSend() {
+    const { firstName } = this.props.activeUser;
+
     const message = {
-      sender: this.state.name,
+      sender: firstName,
       message: this.state.message,
       relation_id: 12345678,
       date_send: Date.now
@@ -46,21 +49,16 @@ export default class ChatsScreen extends Component {
       })
   }
 
-  updateField(text, field) {
-    if (field == 'name') {
-      console.log(text)
-      this.setState({
-        name: text
-      })
-    } else if (field == 'message') {
+  updateField(text) {
       this.setState({
         message: text
       })
-    }
   }
 
 
   render() {
+    const { firstName } = this.props.activeUser;
+    console.log(firstName);
     return (
       <View style={styles.container}>
         <View style={styles.messageContainer}>
@@ -77,14 +75,9 @@ export default class ChatsScreen extends Component {
         </View>
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder={'name'}
-            style={styles.input}
-            onChangeText={(text) => this.updateField(text, 'name')}
-          />
-          <TextInput
             placeholder={'message'}
             style={styles.input}
-            onChangeText={(text) => this.updateField(text, 'message')}
+            onChangeText={(text) => this.updateField(text)}
           />
           <TouchableOpacity
             onPress={() => this.onSend()}
@@ -106,3 +99,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 });
+
+
+const mapStateToProps = state => {
+  return { activeUser: state.activeUser }
+};
+
+export default connect(mapStateToProps)(ChatsScreen);

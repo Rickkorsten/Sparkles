@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Picker } from 'react-native';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import * as actions from '../../actions'
 
-export default class UserScreen extends Component {
+class UserScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -30,10 +32,12 @@ export default class UserScreen extends Component {
       return obj._id === value
     });
     this.setState({ activeUser: result[0] });
-    console.log(this.state.activeUser);
+    // add user to app state
+    this.props.setActiveUser(this.state.activeUser)
   }
 
   render() {
+    console.log(this.props.activeUser)
     if (!this.state.allUsers) {
       return <Text>loading...</Text>
     }
@@ -67,3 +71,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 });
+
+const mapStateToProps = state => {
+  return { activeUser: state.activeUser }
+};
+
+export default connect(mapStateToProps, actions)(UserScreen);
