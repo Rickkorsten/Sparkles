@@ -18,7 +18,7 @@ class UserScreen extends Component {
   }
 
   getAllUsers = () => {
-    axios.get('http://localhost:3000/user')
+    axios.get('https://sparklesapi.azurewebsites.net/user')
       .then(result => {
         console.log(result.data.users);
         this.setState({ allUsers: result.data.users });

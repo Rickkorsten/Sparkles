@@ -9,7 +9,7 @@ class ChatsScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.socket = SocketIOClient.connect('http://localhost:3000');
+    this.socket = SocketIOClient.connect('https://sparklesapi.azurewebsites.net');
     this.socket.on('addMessage', this.getAllMessages)
   }
 
@@ -24,7 +24,7 @@ class ChatsScreen extends Component {
   }
 
   getAllMessages = () => {
-    axios.get('http://localhost:3000/relation/relation/12345678')
+    axios.get('https://sparklesapi.azurewebsites.net/relation/relation/12345678')
       .then(result => {
         this.setState({ allMessages: result.data.data });
       })
@@ -41,7 +41,7 @@ class ChatsScreen extends Component {
 
     };
     console.log(message)
-    axios.post(`http://localhost:3000/message`, message)
+    axios.post(`https://sparklesapi.azurewebsites.net/message`, message)
       .then(res => {
         console.log(res);
       }).catch(err => {
