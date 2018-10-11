@@ -54,7 +54,7 @@ class UserScreen extends Component {
           {
             this.state.allUsers.map(user => {
               return (
-                <Picker.Item label={user.firstName + ' ' + user.lastName} value={user._id} />
+                <Picker.Item key={user._id} label={user.firstName + ' ' + user.lastName} value={user._id} />
               )
             })
           }

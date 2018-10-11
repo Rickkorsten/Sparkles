@@ -14,7 +14,6 @@ class ChatsScreen extends Component {
 
   state = {
     message: 'message',
-    name: 'Rick Korsten',
     allMessages: [],
   }
 
@@ -65,7 +64,7 @@ class ChatsScreen extends Component {
           {
             this.state.allMessages.map(message => {
               return (
-                <View className="message">
+                <View style={styles.message} key={message._id}>
                   <Text>{message.sender}</Text>
                   <Text>{message.message}</Text>
                 </View>
@@ -80,6 +79,7 @@ class ChatsScreen extends Component {
             onChangeText={(text) => this.updateField(text)}
           />
           <TouchableOpacity
+            style={styles.sendButton}
             onPress={() => this.onSend()}
           >
             <Text>
@@ -95,8 +95,23 @@ class ChatsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center'
+  },
+  messageContainer: {
+    flex: 9,
+  },
+  inputContainer: {
+    flex: 1,
+  },
+  input: {
+    backgroundColor: 'grey',
+  },
+  sendButton: {
+    backgroundColor: 'grey',
+  },
+  message: {
+    display: 'flex',
+    flexDirection: 'row',
   }
 });
 
