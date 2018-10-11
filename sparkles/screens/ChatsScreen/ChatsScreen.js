@@ -7,7 +7,8 @@ export default class ChatsScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.socket = SocketIOClient('http://localhost:3000');
+    this.socket = SocketIOClient.connect('http://localhost:3000');
+    this.socket.on('addMessage', this.getAllMessages)
   }
 
   state = {
@@ -18,6 +19,10 @@ export default class ChatsScreen extends Component {
 
 
   componentWillMount() {
+    this.getAllMessages();
+  }
+
+  getAllMessages = () => {
     axios.get('http://localhost:3000/relation/relation/12345678')
       .then(result => {
         this.setState({ allMessages: result.data.data });

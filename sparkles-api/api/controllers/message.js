@@ -34,6 +34,7 @@ exports.message_get_all = (req, res, next) => {
 //
 exports.message_create = (req, res, next) => {
 	// template of item to store
+	const io = req.app.get('io')
 	const message = new Message({
 		_id: new mongoose.Types.ObjectId(),
 		sender: req.body.sender,
@@ -44,6 +45,7 @@ exports.message_create = (req, res, next) => {
 
 	message.save()
 		.then(result => {
+			io.emit('addMessage', req.body);
 			res.status(201).json({
 				message: 'Added message succesfully!',
 				createdMessage: {
@@ -59,7 +61,6 @@ exports.message_create = (req, res, next) => {
 					}
 				}
 			})
-			io.emit('message', message);
 		})
 		.catch(err => {
 			res.status(500).json({
