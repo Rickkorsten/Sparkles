@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-ionicons'
 import SocketIOClient from 'socket.io-client';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -49,9 +50,9 @@ class ChatsScreen extends Component {
   }
 
   updateField(text) {
-      this.setState({
-        message: text
-      })
+    this.setState({
+      message: text
+    })
   }
 
 
@@ -73,19 +74,19 @@ class ChatsScreen extends Component {
           }
         </View>
         <View style={styles.inputContainer}>
-          <TextInput
-            placeholder={'message'}
-            style={styles.input}
-            onChangeText={(text) => this.updateField(text)}
-          />
-          <TouchableOpacity
-            style={styles.sendButton}
-            onPress={() => this.onSend()}
-          >
-            <Text>
-              Send
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.messageBar}>
+            <TextInput
+              placeholder={'message'}
+              style={styles.input}
+              onChangeText={(text) => this.updateField(text)}
+            />
+            <TouchableOpacity
+              style={styles.sendButton}
+              onPress={() => this.onSend()}
+            >
+              <Icon ios="ios-send" android="md-send" size={24} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -102,12 +103,23 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 1,
+    alignItems: 'center'
+  },
+  messageBar: {
+    height: 40,
+    width: '90%',
+    borderRadius: 17,
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: 'grey',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   input: {
-    backgroundColor: 'grey',
+    color: 'white'
   },
   sendButton: {
-    backgroundColor: 'grey',
+
   },
   message: {
     display: 'flex',
