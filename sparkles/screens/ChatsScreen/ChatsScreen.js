@@ -61,7 +61,6 @@ export default class ChatsScreen extends Component {
 
 
   render() {
-    console.log(this.state.allMessages);
     return (
       <View style={styles.container}>
         <View style={styles.messageContainer}>

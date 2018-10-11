@@ -7,7 +7,7 @@ import HomeScreen from './screens/HomeScreen/HomeScreen'
 import UserScreen from './screens/UserScreen/UserScreen'
 import ChatsScreen from './screens/ChatsScreen/ChatsScreen'
 
-export default createBottomTabNavigator({
+const Rootstack = createBottomTabNavigator({
   User: { screen: UserScreen,
     navigationOptions:{
       tabBarLabel: 'Account',
@@ -30,6 +30,12 @@ export default createBottomTabNavigator({
       )
     }}
 });
+
+export default class App extends React.Component {
+  render() {
+    return <Rootstack />
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
