@@ -6,61 +6,57 @@ import * as actions from '../../actions'
 
 class UserScreen extends Component {
 
-  constructor(props) {
-    super(props);
-    state = {
-    }
+  state = {
+    allUsers: undefined
   }
 
   componentWillMount() {
     this.getAllUsers()
-    this.setState({ activeUser: [] })
   }
 
   getAllUsers = () => {
     axios.get('https://sparklesapi.azurewebsites.net/user')
       .then(result => {
-        console.log(result.data.users);
-        this.setState({ allUsers: result.data.users });
-        this.setState({ activeUserId: result.data.users[0]._id })
-        this.setState({ activeUser: result.data.users[0]})
+        this.setState({
+          allUsers: result.data.users,
+          activeUserId: result.data.users[0]._id,
+        }, () => this.props.setActiveUser(result.data.users[0]));
       })
   }
 
-  setUser = (value) => {
-    const result = this.state.allUsers.filter(obj => {
-      return obj._id === value
+  setUser = (itemValue) => {
+    this.setState({ activeUserId: itemValue }, () => {
+
+      const result = this.state.allUsers.filter(obj => {
+        return obj._id === this.state.activeUserId
+      });
+
+      this.props.setActiveUser(result[0])
     });
-    this.setState({ activeUser: result[0] });
-    // add user to app state
-    this.props.setActiveUser(this.state.activeUser)
   }
 
   render() {
-    console.log(this.props.activeUser)
     if (!this.state.allUsers) {
       return <Text>loading...</Text>
+    } else {
+      return (
+        <View style={styles.container}>
+          <Text>Kies een gebruiker</Text>
+          <Picker
+            selectedValue={this.state.activeUserId}
+            style={{ height: 150, width: "80%" }}
+            onValueChange={(itemValue, itemIndex) => this.setUser(itemValue)}>
+            {
+              this.state.allUsers.map(user => {
+                return (
+                  <Picker.Item key={user._id} label={user.firstName + ' ' + user.lastName} value={user._id} />
+                )
+              })
+            }
+          </Picker>
+        </View>
+      );
     }
-    return (
-      <View style={styles.container}>
-        <Text>Kies een gebruiker</Text>
-        <Picker
-          selectedValue={this.state.activeUserId}
-          style={{ height: 150, width: "80%" }}
-          onValueChange={(itemValue, itemIndex) => {
-            this.setState({ activeUserId: itemValue });
-            this.setUser(itemValue);
-          }}>
-          {
-            this.state.allUsers.map(user => {
-              return (
-                <Picker.Item key={user._id} label={user.firstName + ' ' + user.lastName} value={user._id} />
-              )
-            })
-          }
-        </Picker>
-      </View>
-    );
   }
 }
 

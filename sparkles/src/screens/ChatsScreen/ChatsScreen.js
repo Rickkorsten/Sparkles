@@ -57,8 +57,6 @@ class ChatsScreen extends Component {
 
 
   render() {
-    const { firstName } = this.props.activeUser;
-    console.log(firstName);
     return (
       <View style={styles.container}>
         <View style={styles.messageContainer}>
@@ -132,4 +130,4 @@ const mapStateToProps = state => {
   return { activeUser: state.activeUser }
 };
 
-export default connect(mapStateToProps)(ChatsScreen);
+export default connect(mapStateToProps,null)(ChatsScreen);
