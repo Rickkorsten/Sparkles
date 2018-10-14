@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
 class HomeScreen extends Component {
@@ -13,6 +13,11 @@ class HomeScreen extends Component {
     return (
       <View style={styles.container}>
         <Text>{this.props.activeUser.firstName}</Text>
+        <View>
+          <TouchableOpacity>
+            <Text>Vind een match!</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
