@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { createBottomTabNavigator, BottomTabBar } from 'react-navigation';
-import Icon from 'react-native-ionicons'
+
+
 // import redux
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -14,6 +15,9 @@ import HomeScreen from './screens/HomeScreen/HomeScreen'
 import UserScreen from './screens/UserScreen/UserScreen'
 import ChatsScreen from './screens/ChatsScreen/ChatsScreen'
 
+import { createIconSetFromFontello } from 'react-native-vector-icons';
+import fontelloConfig from './config.json';
+const Icon = createIconSetFromFontello(fontelloConfig);
 
 const Rootstack = createBottomTabNavigator(
   {
@@ -22,7 +26,8 @@ const Rootstack = createBottomTabNavigator(
     navigationOptions: {
       tabBarLabel: 'Account',
       tabBarIcon: ({ tintColor }) => (
-        <Icon ios="md-person" color={tintColor} android="md-person" size={24} />
+        <Icon name="sparkles-user" size={24} color={ tintColor } />
+
       )
     }
   },
@@ -31,8 +36,9 @@ const Rootstack = createBottomTabNavigator(
     navigationOptions: {
       tabBarLabel: 'Spark',
       tabBarIcon: ({ tintColor }) => (
-        <Icon ios="md-home" color={tintColor} android="md-home" size={24} />
-      )
+        <Icon name="spark" size={28} color={ tintColor } />
+        //<Text style={styles.name}>Julia</Text>
+        )
     }
   },
   Chats: {
@@ -40,8 +46,8 @@ const Rootstack = createBottomTabNavigator(
     navigationOptions: {
       tabBarLabel: 'Sparks',
       tabBarIcon: ({ tintColor }) => (
-        <Icon ios="md-chatbubbles" color={tintColor} android="md-chatbubbles" size={24} />
-      )
+        <Icon name="sparks" size={24} color={ tintColor } />
+        )
     }
   }
 }, {
@@ -84,5 +90,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+
+  name: {
+    fontFamily: 'Raleway-Light',
+    fontSize: 20,
+  }
 });
 
