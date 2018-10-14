@@ -4,6 +4,8 @@ import Icon from 'react-native-ionicons'
 import SocketIOClient from 'socket.io-client';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+
 
 class ChatsScreen extends Component {
 
@@ -11,6 +13,10 @@ class ChatsScreen extends Component {
     super(props);
     this.socket = SocketIOClient.connect('https://sparklesapi.azurewebsites.net');
     this.socket.on('addMessage', this.getAllMessages)
+
+    this.inverted = true;
+    this.renderAvatar = null;
+    this.isAnimated = true;
   }
 
   state = {
@@ -21,27 +27,21 @@ class ChatsScreen extends Component {
 
   componentWillMount() {
     this.getAllMessages();
+    console.log(this.props._id);
   }
 
   getAllMessages = () => {
     axios.get('https://sparklesapi.azurewebsites.net/relation/relation/12345678')
       .then(result => {
-        this.setState({ allMessages: result.data.data });
+        this.setState({ allMessages: result.data.data.reverse() });
+        console.log({ allMessages: result.data.data.reverse() });
       })
   }
 
-  onSend() {
+  onSend(message) {
     const { firstName } = this.props.activeUser;
-
-    const message = {
-      sender: firstName,
-      message: this.state.message,
-      relation_id: 12345678,
-      date_send: Date.now
-
-    };
-    console.log(message)
-    axios.post(`https://sparklesapi.azurewebsites.net/message`, message)
+    console.log(message[0])
+    axios.post(`https://sparklesapi.azurewebsites.net/message`, message[0])
       .then(res => {
         console.log(res);
       }).catch(err => {
@@ -55,38 +55,34 @@ class ChatsScreen extends Component {
     })
   }
 
+  renderBubble(props) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: '#f19894',
+          }
+        }}
+      />
+    );
+  }
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.messageContainer}>
-          {
-            this.state.allMessages.map(message => {
-              return (
-                <View style={styles.message} key={message._id}>
-                  <Text>{message.sender}</Text>
-                  <Text>{message.message}</Text>
-                </View>
-              )
-            })
-          }
-        </View>
-        <View style={styles.inputContainer}>
-          <View style={styles.messageBar}>
-            <TextInput
-              placeholder={'message'}
-              style={styles.input}
-              onChangeText={(text) => this.updateField(text)}
-            />
-            <TouchableOpacity
-              style={styles.sendButton}
-              onPress={() => this.onSend()}
-            >
-              <Icon ios="ios-send" android="md-send" size={24} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+      <GiftedChat
+        messages={this.state.allMessages}
+        onSend={message => this.onSend(message)}
+        user={{
+          _id: this.props.activeUser._id,
+          name: this.props.activeUser.firstName
+        }}
+        renderBubble={this.renderBubble}
+        inverted={this.inverted}
+        renderAvatar={this.renderAvatar}
+        isAnimated = {this.isAnimated}
+      />
+
     );
   }
 }
