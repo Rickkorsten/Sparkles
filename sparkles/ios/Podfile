@@ -13,6 +13,8 @@ target 'sparkles' do
   pod 'React', path: '../node_modules/react-native'
   pod 'yoga', path: '../node_modules/react-native/ReactCommon/yoga'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'sparklesTests' do
     inherit! :search_paths
     # Pods for testing
