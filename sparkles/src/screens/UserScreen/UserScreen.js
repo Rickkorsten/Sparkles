@@ -31,7 +31,11 @@ class UserScreen extends Component {
         return obj._id === this.state.activeUserId
       });
 
-      this.props.setActiveUser(result[0])
+      this.props.setActiveUser(result[0]).then(
+       // axios.post('https://sparklesapi.azurewebsites.net/user/login',
+       console.log('then')
+      )
+
     });
   }
 

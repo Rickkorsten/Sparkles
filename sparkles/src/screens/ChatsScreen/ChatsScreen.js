@@ -40,6 +40,8 @@ class ChatsScreen extends Component {
 
   onSend(message) {
     const { firstName } = this.props.activeUser;
+    // destruct message like active user
+    // send relation id with message
     console.log(message[0])
     axios.post(`https://sparklesapi.azurewebsites.net/message`, message[0])
       .then(res => {
