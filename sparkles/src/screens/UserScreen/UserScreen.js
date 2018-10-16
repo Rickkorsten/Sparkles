@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Picker } from 'react-native';
+import { Platform, StyleSheet, Text, View, Picker, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import * as actions from '../../actions'
+import * as actions from '../../actions';
 
 class UserScreen extends Component {
 
@@ -31,12 +31,22 @@ class UserScreen extends Component {
         return obj._id === this.state.activeUserId
       });
 
-      this.props.setActiveUser(result[0]).then(
-       // axios.post('https://sparklesapi.azurewebsites.net/user/login',
-       console.log('then')
-      )
-
+      this.props.setActiveUser(result[0])
     });
+  }
+
+  login = () => {
+    const { device_id, lastName } = this.props.activeUser;
+
+    const authUser = {
+      'device_id': device_id,
+      'lastName': lastName
+    }
+    axios.post('http://localhost:3000/user/login', authUser)
+      .then(result => {
+        this.props.setAuthToken(result.data.token);
+        this.props.navigation.navigate('Home');
+      });
   }
 
   render() {
@@ -45,7 +55,6 @@ class UserScreen extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <Text>Kies een gebruiker</Text>
           <Picker
             selectedValue={this.state.activeUserId}
             style={{ height: 150, width: "80%" }}
@@ -58,6 +67,9 @@ class UserScreen extends Component {
               })
             }
           </Picker>
+          <TouchableOpacity style={styles.matchButton} onPress={this.login}>
+            <Text style={styles.matchButtonText}>Login</Text>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -69,11 +81,32 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  matchButton: {
+    textAlign: 'center',
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingLeft: 28,
+    paddingRight: 28,
+    borderRadius: 16,
+    borderTopRightRadius: 4,
+    backgroundColor: '#f19894',
+    marginBottom: -60,
+    marginTop: 100
+  },
+  matchButtonText: {
+    color: '#fff',
+    fontFamily: 'Raleway-Light',
+    fontSize: 18,
+    textAlign: 'center'
   }
 });
 
 const mapStateToProps = state => {
-  return { activeUser: state.activeUser }
+  return {
+    activeUser: state.activeUser,
+    authToken: state.authToken
+  }
 };
 
 export default connect(mapStateToProps, actions)(UserScreen);

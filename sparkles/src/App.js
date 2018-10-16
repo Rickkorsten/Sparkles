@@ -26,7 +26,7 @@ const Rootstack = createBottomTabNavigator(
     navigationOptions: {
       tabBarLabel: 'Account',
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="sparkles-user" size={22} color={ tintColor } />
+        <Icon name="sparkles-user" size={24} color={ tintColor } />
 
       )
     }
@@ -36,7 +36,7 @@ const Rootstack = createBottomTabNavigator(
     navigationOptions: {
       tabBarLabel: 'Spark',
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="spark" size={30} color={ tintColor } />
+        <Icon name="spark" size={28} color={ tintColor } />
         //<Text style={styles.name}>Julia</Text>
         )
     }
@@ -46,7 +46,7 @@ const Rootstack = createBottomTabNavigator(
     navigationOptions: {
       tabBarLabel: 'Sparks',
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="sparks" size={22} color={ tintColor } />
+        <Icon name="sparks" size={24} color={ tintColor } />
         )
     }
   }

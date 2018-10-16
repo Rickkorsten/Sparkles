@@ -9,32 +9,46 @@ const height = '80%';
 class HomeScreen extends Component {
 
   componentWillMount() {
-    console.log(this.props.activeUser[0])
   }
 
-  render() {
-    console.log(this.props.activeUser)
+  renderSearchView = () => {
     return (
-      <View style={styles.container}>
-      <Text style={styles.logo}>Sparkles</Text>
-        <View style={styles.sparkContainer}>
-          <LottieView
-            style={{
-              width: 100
-            }}
-            source={require('./../../../assets/animation-searching.json')}
-            autoPlay
-            loop
-          />
-          <Text style={styles.underline}>
+      <View style={styles.sparkContainer}>
+        <LottieView
+          style={{
+            width: 100
+          }}
+          source={require('./../../../assets/animation-searching.json')}
+          autoPlay
+          loop
+        />
+        <Text style={styles.underline}>
           Looking for the{"\n"}
           perfect Spark</Text>
 
-          <View>
+        <View>
           <TouchableOpacity style={styles.matchButton}>
             <Text style={styles.matchButtonText}>Start a new Spark</Text>
           </TouchableOpacity>
         </View>
+      </View>
+    )
+  }
+
+  render() {
+    const { search_spark } = this.props.activeUser;
+    let content;
+
+    if (!search_spark) {
+      content = this.renderSearchView()
+    } else {
+      content = <Text>rick</Text>
+    }
+    return (
+      <View style={styles.container}>
+        <Text style={styles.logo}>Sparkles</Text>
+        <View style={styles.sparkContainer}>
+          {content}
         </View>
       </View>
     );
@@ -89,7 +103,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  return { activeUser: state.activeUser }
+  return {
+    activeUser: state.activeUser,
+    authToken: state.authToken
+  }
 };
 
 export default connect(mapStateToProps)(HomeScreen);
