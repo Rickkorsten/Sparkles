@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Picker, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Picker, TouchableOpacity, StatusBar } from 'react-native';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
@@ -42,7 +42,7 @@ class UserScreen extends Component {
       'device_id': device_id,
       'lastName': lastName
     }
-    axios.post('http://localhost:3000/user/login', authUser)
+    axios.post('https://sparklesapi.azurewebsites.net/user/login', authUser)
       .then(result => {
         this.props.setAuthToken(result.data.token);
         this.props.navigation.navigate('Home');
@@ -55,6 +55,10 @@ class UserScreen extends Component {
     } else {
       return (
         <View style={styles.container}>
+          <StatusBar
+            backgroundColor="white"
+            barStyle="dark-content"
+          />
           <Picker
             selectedValue={this.state.activeUserId}
             style={{ height: 150, width: "80%" }}

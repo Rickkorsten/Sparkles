@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">sparkles</string>
+      <color name="background">#ffffff</color>
 </resources>

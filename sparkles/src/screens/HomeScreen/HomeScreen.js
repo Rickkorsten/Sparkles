@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
 
@@ -35,6 +35,20 @@ class HomeScreen extends Component {
     )
   }
 
+  renderActiveView = () => {
+    return (
+
+      <ImageBackground
+        source={{uri: 'https://scontent-amt2-1.cdninstagram.com/vp/eb7bd82f523c49eefcd21cb0d3222225/5C8ABB3D/t51.2885-15/e35/36918017_1994195137272064_6412393113595150336_n.jpg'}}
+        imageStyle={{resizeMode: 'cover', width: '100%', height: '100%'}}
+        style={styles.sparkContainerActive}
+        blurRadius={12}>
+          <Text> </Text>
+          <Text style={styles.sparkName}>Rick</Text>
+        </ImageBackground>
+    )
+  }
+
   render() {
     const { search_spark } = this.props.activeUser;
     let content;
@@ -42,14 +56,12 @@ class HomeScreen extends Component {
     if (!search_spark) {
       content = this.renderSearchView()
     } else {
-      content = <Text>rick</Text>
+      content = this.renderActiveView()
     }
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>Sparkles</Text>
-        <View style={styles.sparkContainer}>
           {content}
-        </View>
       </View>
     );
   }
@@ -67,7 +79,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 15,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3,    
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  sparkContainerActive: {
+    width: '80%',
+    height: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    justifyContent: 'space-between',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3,    
+      },
+      android: {
+        elevation: 12,
+      },
+    }),
   },
   logo: {
     marginBottom: 30,
@@ -80,6 +122,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway-Light',
     fontSize: 22,
     textAlign: 'center'
+  },
+  sparkName: {
+    marginBottom: 30,
+    marginLeft: 30,
+    fontFamily: 'Raleway-Light',
+    fontSize: 32,
+    color: 'white'
   },
   matchButton: {
     textAlign: 'center',
@@ -98,7 +147,20 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway-Light',
     fontSize: 18,
     textAlign: 'center'
-  }
+  },
+  elevationLow: {
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,    
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
 
 });
 
