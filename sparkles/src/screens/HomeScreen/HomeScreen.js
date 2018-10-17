@@ -2,13 +2,59 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
+import axios from 'axios';
 
 const width = '80%';
 const height = '80%';
 
 class HomeScreen extends Component {
 
-  componentWillMount() {
+  state = {
+    activeUser: this.props.activeUser
+  }
+
+  async componentDidMount() {
+    const { _id, search_spark } = this.state.activeUser;
+    if (!search_spark) {
+      this.getRelationUserId(_id)
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.activeUser!==this.props.activeUser){
+      
+      this.setState({activeUser :nextProps.activeUser });
+      this.getRelationUserId(nextProps.activeUser._id);
+    }
+  }
+
+  getRelationUserId = (_id) => {
+  
+      axios.get(`https://sparklesapi.azurewebsites.net/relation/active_relation/${_id}`)
+      .then(async res => {
+        const { first_user_id, second_user_id } = res.data.data[0];
+        if (_id == first_user_id) {
+          const relationUserData = await this.getRelationUserData(second_user_id);
+          this.setState({ relationUserData })
+        } else {
+          const relationUserData = await this.getRelationUserData(first_user_id)
+          this.setState({ relationUserData })
+        }
+      }).catch(err => {
+        console.log(err.message);
+      })
+  }
+
+
+  getRelationUserData = (id) => {
+    return new Promise((resolve, reject) => {
+      axios.get(`http://localhost:3000/user/${id}`)
+        .then(res => {
+          resolve(res.data)
+        }).catch(err => {
+          console.log(err.message);
+        })
+    })
   }
 
   renderSearchView = () => {
@@ -36,32 +82,35 @@ class HomeScreen extends Component {
   }
 
   renderActiveView = () => {
+    const { firstName, userImage } = this.state.relationUserData;
+    console.log(this.state.relationUserData);
     return (
-
       <ImageBackground
-        source={{uri: 'https://scontent-amt2-1.cdninstagram.com/vp/eb7bd82f523c49eefcd21cb0d3222225/5C8ABB3D/t51.2885-15/e35/36918017_1994195137272064_6412393113595150336_n.jpg'}}
-        imageStyle={{resizeMode: 'cover', width: '100%', height: '100%'}}
+        source={{ uri: `http://localhost:3000/${userImage}` }}
+        imageStyle={{ resizeMode: 'cover', width: '100%', height: '100%' }}
         style={styles.sparkContainerActive}
         blurRadius={12}>
-          <Text> </Text>
-          <Text style={styles.sparkName}>Rick</Text>
-        </ImageBackground>
+        <Text> </Text>
+        <Text style={styles.sparkName}>{firstName}</Text>
+      </ImageBackground>
     )
   }
 
   render() {
-    const { search_spark } = this.props.activeUser;
+    const { _id, search_spark } = this.props.activeUser;
     let content;
 
-    if (!search_spark) {
+    if (search_spark) {
       content = this.renderSearchView()
-    } else {
+    } else if (this.state.relationUserData) {
       content = this.renderActiveView()
+    } else {
+      content = <View><Text>Loading...</Text></View>
     }
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>Sparkles</Text>
-          {content}
+        {content}
       </View>
     );
   }
@@ -85,7 +134,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.15,
-        shadowRadius: 3,    
+        shadowRadius: 3,
       },
       android: {
         elevation: 3,
@@ -104,7 +153,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.15,
-        shadowRadius: 3,    
+        shadowRadius: 3,
       },
       android: {
         elevation: 12,
@@ -154,7 +203,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
-        shadowRadius: 2,    
+        shadowRadius: 2,
       },
       android: {
         elevation: 5,
