@@ -30,9 +30,10 @@ class HomeScreen extends Component {
 
   getRelationUserId = (_id) => {
   
-      axios.get(`https://sparklesapi.azurewebsites.net/relation/active_relation/${_id}`)
+      axios.get(`http://localhost:3000/relation/active_relation/${_id}`)
       .then(async res => {
-        const { first_user_id, second_user_id } = res.data.data[0];
+        console.log(res.data[0].first_user_id);
+        const { first_user_id, second_user_id } = res.data[0];
         if (_id == first_user_id) {
           const relationUserData = await this.getRelationUserData(second_user_id);
           this.setState({ relationUserData })
