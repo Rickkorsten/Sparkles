@@ -65,6 +65,7 @@ class HomeScreen extends Component {
         console.log(err.message);
       })
   }
+  
 
 
   getRelationUserData = (id) => {
@@ -87,6 +88,10 @@ class HomeScreen extends Component {
       }).catch(err => {
         console.log(err.message);
       })
+  }
+
+  goToChat = () => {
+    this.props.navigation.navigate('Chats');
   }
 
   renderSearchView = () => {
@@ -120,14 +125,16 @@ class HomeScreen extends Component {
   renderActiveView = () => {
     const { firstName, userImage } = this.state.relationUserData;
     return (
-      <ImageBackground
-        source={{ uri: `https://sparklesapi.azurewebsites.net/${userImage}` }}
-        imageStyle={{ resizeMode: 'cover', width: '100%', height: '100%' }}
-        style={styles.sparkContainerActive}
-        blurRadius={12}>
-        <Text> </Text>
-        <Text style={styles.sparkName}>{firstName}</Text>
-      </ImageBackground>
+      <TouchableOpacity onPress={this.goToChat} style={styles.sparkContainerActive}>
+        <ImageBackground
+          source={{ uri: `https://sparklesapi.azurewebsites.net/${userImage}` }}
+          imageStyle={{ resizeMode: 'cover', width: '100%', height: '100%' }}
+          style={styles.sparkContainerActiveImg}
+          blurRadius={12}>
+          <Text> </Text>
+          <Text style={styles.sparkName}>{firstName}</Text>
+        </ImageBackground>
+      </TouchableOpacity>
     )
   }
 
@@ -155,6 +162,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white'
   },
   sparkContainer: {
     width: '80%',
@@ -193,6 +201,13 @@ const styles = StyleSheet.create({
         elevation: 12,
       },
     }),
+  },
+  sparkContainerActiveImg: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+    justifyContent: 'space-between',
+    overflow: 'hidden'
   },
   logo: {
     marginBottom: 30,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { createBottomTabNavigator, BottomTabBar } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation'; // Version can be specified in package.json
 
 
 // import redux
@@ -19,6 +20,18 @@ import { createIconSetFromFontello } from 'react-native-vector-icons';
 import fontelloConfig from './config.json';
 const Icon = createIconSetFromFontello(fontelloConfig);
 
+
+
+const ChatsStack = createStackNavigator({
+  Chats: { screen: ChatsScreen },
+  Home: { screen: HomeScreen }
+});
+
+const HomeStack = createStackNavigator({
+  Home: { screen: HomeScreen },
+  Chats: { screen: ChatsScreen }
+});
+
 const Rootstack = createBottomTabNavigator(
   {
   User: {
@@ -32,7 +45,7 @@ const Rootstack = createBottomTabNavigator(
     }
   },
   Home: {
-    screen: HomeScreen,
+    screen: HomeStack,
     navigationOptions: {
       tabBarLabel: 'Spark',
       tabBarIcon: ({ tintColor }) => (
@@ -42,7 +55,7 @@ const Rootstack = createBottomTabNavigator(
     }
   },
   Chats: {
-    screen: ChatsScreen,
+    screen: ChatsStack,
     navigationOptions: {
       tabBarLabel: 'Sparks',
       tabBarIcon: ({ tintColor }) => (
@@ -77,7 +90,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      
+
       <Provider store={createStore(reducers)}>
         <Rootstack />
       </Provider>

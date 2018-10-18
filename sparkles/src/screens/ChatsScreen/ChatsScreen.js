@@ -8,7 +8,9 @@ import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 
 
 class ChatsScreen extends Component {
-
+  static navigationOptions = {
+    title: 'Tom',
+  };
   constructor(props) {
     super(props);
     this.socket = SocketIOClient.connect('https://sparklesapi.azurewebsites.net');
@@ -139,7 +141,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   }
 });
-
 
 const mapStateToProps = state => {
   return {
