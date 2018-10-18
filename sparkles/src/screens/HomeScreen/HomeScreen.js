@@ -58,6 +58,7 @@ class HomeScreen extends Component {
         console.log(err.message);
       })
   }
+  
 
 
   getRelationUserData = (id) => {
@@ -83,6 +84,10 @@ class HomeScreen extends Component {
       })
   }
 
+  goToChat = () => {
+    this.props.navigation.navigate('Chats');
+  }
+
   renderSearchView = () => {
     const { status } = this.props.activeUser;
     return (
@@ -106,7 +111,7 @@ class HomeScreen extends Component {
                 <Text style={styles.searchBatchText}>searching</Text>
               </TouchableOpacity>
               :
-              <TouchableOpacity onPress={this.createRelation} on style={styles.matchButton}>
+              <TouchableOpacity onPress={this.createRelation} style={styles.matchButton}>
                 <Text style={styles.matchButtonText}>Start a new Spark</Text>
               </TouchableOpacity>
           }
@@ -119,14 +124,16 @@ class HomeScreen extends Component {
     const { firstName, userImage } = this.state.relationUserData;
     console.log(this.state.relationUserData);
     return (
-      <ImageBackground
-        source={{ uri: `https://sparklesapi.azurewebsites.net/${userImage}` }}
-        imageStyle={{ resizeMode: 'cover', width: '100%', height: '100%' }}
-        style={styles.sparkContainerActive}
-        blurRadius={12}>
-        <Text> </Text>
-        <Text style={styles.sparkName}>{firstName}</Text>
-      </ImageBackground>
+      <TouchableOpacity onPress={this.goToChat} style={styles.sparkContainerActive}>
+        <ImageBackground
+          source={{ uri: `https://sparklesapi.azurewebsites.net/${userImage}` }}
+          imageStyle={{ resizeMode: 'cover', width: '100%', height: '100%' }}
+          style={styles.sparkContainerActiveImg}
+          blurRadius={12}>
+          <Text> </Text>
+          <Text style={styles.sparkName}>{firstName}</Text>
+        </ImageBackground>
+      </TouchableOpacity>
     )
   }
 
@@ -154,6 +161,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white'
   },
   sparkContainer: {
     width: '80%',
@@ -192,6 +200,13 @@ const styles = StyleSheet.create({
         elevation: 12,
       },
     }),
+  },
+  sparkContainerActiveImg: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+    justifyContent: 'space-between',
+    overflow: 'hidden'
   },
   logo: {
     marginBottom: 30,

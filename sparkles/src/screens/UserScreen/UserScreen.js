@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Picker, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Picker, TouchableOpacity, StatusBar } from 'react-native';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
@@ -56,6 +56,10 @@ class UserScreen extends Component {
     } else {
       return (
         <View style={styles.container}>
+        <StatusBar
+            backgroundColor="white"
+            barStyle="dark-content"
+          />
           <Picker
             selectedValue={this.state.activeUserId}
             style={{ height: 150, width: "80%" }}
