@@ -20,8 +20,8 @@ class HomeScreen extends Component {
   }
 
   async componentDidMount() {
-    const { _id, search_spark } = this.state.activeUser;
-    if (!search_spark) {
+    const { _id, status } = this.state.activeUser;
+    if (status == 'in_relation') {
       this.getRelationUserId(_id)
     }
   }
@@ -30,12 +30,11 @@ class HomeScreen extends Component {
     if (nextProps.activeUser !== this.props.activeUser) {
 
       this.setState({ activeUser: nextProps.activeUser });
-      console.log('next search spark ' + nextProps.activeUser.search_spark);
-      if (!nextProps.activeUser.search_spark) {
+      console.log('next search spark ' + nextProps.activeUser.status);
+      if (!nextProps.activeUser.status) {
         this.getRelationUserId(nextProps.activeUser._id);
       } else {
-        // there is no active relation
-        this.props.setActiveRelation(null)
+
       }
     }
   }
@@ -85,7 +84,7 @@ class HomeScreen extends Component {
   }
 
   renderSearchView = () => {
-    const { search_spark } = this.props.activeUser;
+    const { status } = this.props.activeUser;
     return (
       <View style={styles.sparkContainer}>
         <LottieView
@@ -102,7 +101,7 @@ class HomeScreen extends Component {
 
         <View>
           {
-            this.state.waiting || search_spark == 'waiting' ?
+            status == 'searching' ?
               <TouchableOpacity onPress={this.createRelation} on style={styles.searchBatch}>
                 <Text style={styles.searchBatchText}>searching</Text>
               </TouchableOpacity>
@@ -132,16 +131,15 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { _id, search_spark } = this.props.activeUser;
+    const { _id, status } = this.props.activeUser;
     let content;
 
-    if (search_spark || search_spark == 'waiting') {
+    if (status == 'no_relation' || status == 'searching') {
       content = this.renderSearchView()
     } else if (this.state.relationUserData) {
       content = this.renderActiveView()
-    } else {
-      content = <View><Text>Loading...</Text></View>
     }
+    
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>Sparkles</Text>
