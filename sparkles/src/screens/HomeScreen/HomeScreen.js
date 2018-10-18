@@ -9,8 +9,13 @@ const height = '80%';
 
 class HomeScreen extends Component {
 
+  constructor(props) {
+    super(props);
+  }
+
   state = {
-    activeUser: this.props.activeUser
+    activeUser: this.props.activeUser,
+    waiting: false
   }
 
   async componentDidMount() {
@@ -20,17 +25,17 @@ class HomeScreen extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.activeUser!==this.props.activeUser){
-      
-      this.setState({activeUser :nextProps.activeUser });
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.activeUser !== this.props.activeUser) {
+
+      this.setState({ activeUser: nextProps.activeUser });
       this.getRelationUserId(nextProps.activeUser._id);
     }
   }
 
   getRelationUserId = (_id) => {
-  
-      axios.get(`http://localhost:3000/relation/active_relation/${_id}`)
+
+    axios.get(`https://sparklesapi.azurewebsites.net/relation/active_relation/${_id}`)
       .then(async res => {
         console.log(res.data[0].first_user_id);
         const { first_user_id, second_user_id } = res.data[0];
@@ -49,7 +54,7 @@ class HomeScreen extends Component {
 
   getRelationUserData = (id) => {
     return new Promise((resolve, reject) => {
-      axios.get(`http://localhost:3000/user/${id}`)
+      axios.get(`https://sparklesapi.azurewebsites.net/user/${id}`)
         .then(res => {
           resolve(res.data)
         }).catch(err => {
@@ -58,7 +63,20 @@ class HomeScreen extends Component {
     })
   }
 
+  createRelation = () => {
+    const { _id, preference, language } = this.props.activeUser;
+    console.log(_id, preference, language);
+    axios.get(`https://sparklesapi.azurewebsites.net/matching/search_match/${_id}/${preference}/${language}`)
+      .then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err.message);
+        this.setState({ waiting: true })
+      })
+  }
+
   renderSearchView = () => {
+    const { search_spark } = this.props.activeUser;
     return (
       <View style={styles.sparkContainer}>
         <LottieView
@@ -74,9 +92,16 @@ class HomeScreen extends Component {
           perfect Spark</Text>
 
         <View>
-          <TouchableOpacity style={styles.matchButton}>
-            <Text style={styles.matchButtonText}>Start a new Spark</Text>
-          </TouchableOpacity>
+          {
+            this.state.waiting || search_spark == 'waiting'  ?
+              <TouchableOpacity onPress={this.createRelation} on style={styles.searchBatch}>
+                <Text style={styles.searchBatchText}>searching</Text>
+              </TouchableOpacity>
+              :
+              <TouchableOpacity onPress={this.createRelation} on style={styles.matchButton}>
+                <Text style={styles.matchButtonText}>Start a new Spark</Text>
+              </TouchableOpacity>
+          }
         </View>
       </View>
     )
@@ -87,7 +112,7 @@ class HomeScreen extends Component {
     console.log(this.state.relationUserData);
     return (
       <ImageBackground
-        source={{ uri: `http://localhost:3000/${userImage}` }}
+        source={{ uri: `https://sparklesapi.azurewebsites.net/${userImage}` }}
         imageStyle={{ resizeMode: 'cover', width: '100%', height: '100%' }}
         style={styles.sparkContainerActive}
         blurRadius={12}>
@@ -101,7 +126,7 @@ class HomeScreen extends Component {
     const { _id, search_spark } = this.props.activeUser;
     let content;
 
-    if (search_spark) {
+    if (search_spark || search_spark == 'waiting') {
       content = this.renderSearchView()
     } else if (this.state.relationUserData) {
       content = this.renderActiveView()
@@ -194,6 +219,24 @@ const styles = StyleSheet.create({
   },
   matchButtonText: {
     color: '#fff',
+    fontFamily: 'Raleway-Light',
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  searchBatch: {
+    textAlign: 'center',
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingLeft: 28,
+    paddingRight: 28,
+    borderRadius: 16,
+    borderTopRightRadius: 4,
+    backgroundColor: '#fff',
+    marginBottom: -60,
+    marginTop: 100
+  },
+  searchBatchText: {
+    color: '#f19894',
     fontFamily: 'Raleway-Light',
     fontSize: 18,
     textAlign: 'center'

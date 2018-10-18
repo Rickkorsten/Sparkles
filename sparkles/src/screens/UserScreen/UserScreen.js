@@ -15,7 +15,7 @@ class UserScreen extends Component {
   }
 
   getAllUsers = () => {
-    axios.get('http://localhost:3000/user')
+    axios.get('https://sparklesapi.azurewebsites.net/user')
       .then(result => {
         this.setState({
           allUsers: result.data.users,
@@ -42,7 +42,7 @@ class UserScreen extends Component {
       'device_id': device_id,
       'lastName': lastName
     }
-    axios.post('http://localhost:3000/user/login', authUser)
+    axios.post('https://sparklesapi.azurewebsites.net/user/login', authUser)
       .then(result => {
         this.props.setAuthToken(result.data.token);
         this.props.navigation.navigate('Home');
