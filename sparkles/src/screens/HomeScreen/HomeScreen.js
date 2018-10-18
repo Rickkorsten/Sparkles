@@ -8,6 +8,14 @@ import axios from 'axios';
 const width = '80%';
 const height = '80%';
 
+const Button = (props) => {
+    return (
+      <TouchableOpacity onPress={props.onPress} on style={props.border ? styles.matchButton : styles.searchBatch}>
+        <Text style={props.border ? styles.matchButtonText : styles.searchBatchText}>{props.title}</Text>
+      </TouchableOpacity>
+    )
+}
+
 class HomeScreen extends Component {
 
   constructor(props) {
@@ -16,11 +24,10 @@ class HomeScreen extends Component {
 
   state = {
     activeUser: this.props.activeUser,
-    waiting: false
   }
 
   async componentDidMount() {
-    const { _id, status } = this.state.activeUser;
+    const { _id, status } = this.props.activeUser;
     if (status == 'in_relation') {
       this.getRelationUserId(_id)
     }
@@ -31,10 +38,10 @@ class HomeScreen extends Component {
 
       this.setState({ activeUser: nextProps.activeUser });
       console.log('next search spark ' + nextProps.activeUser.status);
-      if (!nextProps.activeUser.status) {
+      if (nextProps.activeUser.status == 'in_relation') {
         this.getRelationUserId(nextProps.activeUser._id);
       } else {
-
+        this.props.setActiveRelation(null)
       }
     }
   }
@@ -79,7 +86,6 @@ class HomeScreen extends Component {
         console.log(res)
       }).catch(err => {
         console.log(err.message);
-        this.setState({ waiting: true })
       })
   }
 
@@ -102,13 +108,9 @@ class HomeScreen extends Component {
         <View>
           {
             status == 'searching' ?
-              <TouchableOpacity onPress={this.createRelation} on style={styles.searchBatch}>
-                <Text style={styles.searchBatchText}>searching</Text>
-              </TouchableOpacity>
+              <Button title={'searching'} border={false} />
               :
-              <TouchableOpacity onPress={this.createRelation} on style={styles.matchButton}>
-                <Text style={styles.matchButtonText}>Start a new Spark</Text>
-              </TouchableOpacity>
+              <Button onPress={this.createRelation} title={'Start a new Spark'} border={true} />
           }
         </View>
       </View>
@@ -117,7 +119,6 @@ class HomeScreen extends Component {
 
   renderActiveView = () => {
     const { firstName, userImage } = this.state.relationUserData;
-    console.log(this.state.relationUserData);
     return (
       <ImageBackground
         source={{ uri: `https://sparklesapi.azurewebsites.net/${userImage}` }}
@@ -139,7 +140,7 @@ class HomeScreen extends Component {
     } else if (this.state.relationUserData) {
       content = this.renderActiveView()
     }
-    
+
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>Sparkles</Text>
