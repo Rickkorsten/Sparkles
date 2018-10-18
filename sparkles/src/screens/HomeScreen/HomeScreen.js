@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
+import * as actions from '../../actions';
 import LottieView from 'lottie-react-native';
 import axios from 'axios';
 
@@ -29,7 +30,13 @@ class HomeScreen extends Component {
     if (nextProps.activeUser !== this.props.activeUser) {
 
       this.setState({ activeUser: nextProps.activeUser });
-      this.getRelationUserId(nextProps.activeUser._id);
+      console.log('next search spark ' + nextProps.activeUser.search_spark);
+      if (!nextProps.activeUser.search_spark) {
+        this.getRelationUserId(nextProps.activeUser._id);
+      } else {
+        // there is no active relation
+        this.props.setActiveRelation(null)
+      }
     }
   }
 
@@ -37,7 +44,9 @@ class HomeScreen extends Component {
 
     axios.get(`https://sparklesapi.azurewebsites.net/relation/active_relation/${_id}`)
       .then(async res => {
-        console.log(res.data[0].first_user_id);
+        // set active relation
+        this.props.setActiveRelation(res.data[0])
+        console.log(res.data[0]);
         const { first_user_id, second_user_id } = res.data[0];
         if (_id == first_user_id) {
           const relationUserData = await this.getRelationUserData(second_user_id);
@@ -93,7 +102,7 @@ class HomeScreen extends Component {
 
         <View>
           {
-            this.state.waiting || search_spark == 'waiting'  ?
+            this.state.waiting || search_spark == 'waiting' ?
               <TouchableOpacity onPress={this.createRelation} on style={styles.searchBatch}>
                 <Text style={styles.searchBatchText}>searching</Text>
               </TouchableOpacity>
@@ -260,8 +269,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     activeUser: state.activeUser,
-    authToken: state.authToken
+    authToken: state.authToken,
+    activeRelation: state.activeRelation
   }
 };
 
-export default connect(mapStateToProps)(HomeScreen);
+export default connect(mapStateToProps, actions)(HomeScreen);

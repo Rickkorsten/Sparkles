@@ -26,24 +26,31 @@ class ChatsScreen extends Component {
 
 
   componentWillMount() {
-    this.getAllMessages();
-    console.log(this.props._id);
+    if (this.props.activeRelation != null) {
+      this.getAllMessages();
+    }
   }
 
-  getAllMessages = () => {
-    axios.get('https://sparklesapi.azurewebsites.net/relation/relation/12345678')
+  getAllMessages = (relation_id) => {
+    const {_id} = this.props.activeRelation
+    axios.get(`https://sparklesapi.azurewebsites.net/relation/relation/${_id}`)
       .then(result => {
-        this.setState({ allMessages: result.data.data.reverse() });
-        console.log({ allMessages: result.data.data.reverse() });
+        console.log(result)
+        const messages = result.data.data.reverse();
+        this.setState({ allMessages: messages });
       })
   }
 
   onSend(message) {
-    const { firstName } = this.props.activeUser;
+    const { _id } = this.props.activeRelation;
+
     // destruct message like active user
     // send relation id with message
-    console.log(message[0])
-    axios.post(`https://sparklesapi.azurewebsites.net/message`, message[0])
+    const newMessage = message[0]
+    newMessage.relation_id = _id;
+    console.log(newMessage)
+
+    axios.post(`https://sparklesapi.azurewebsites.net/message`, newMessage)
       .then(res => {
         console.log(res);
       }).catch(err => {
@@ -71,22 +78,32 @@ class ChatsScreen extends Component {
   }
 
   render() {
+    console.log(this.props.activeRelation)
     return (
-      <GiftedChat
-        messages={this.state.allMessages}
-        onSend={message => this.onSend(message)}
-        user={{
-          _id: this.props.activeUser._id,
-          name: this.props.activeUser.firstName
-        }}
-        renderBubble={this.renderBubble}
-        inverted={this.inverted}
-        renderAvatar={this.renderAvatar}
-        isAnimated = {this.isAnimated}
-      />
+      <View style={styles.container}>
+        {
+          this.props.activeRelation != null ?
+            <GiftedChat
+              messages={this.state.allMessages}
+              onSend={message => this.onSend(message)}
+              user={{
+                _id: this.props.activeUser._id,
+                name: this.props.activeUser.firstName
+              }}
+              renderBubble={this.renderBubble}
+              inverted={this.inverted}
+              renderAvatar={this.renderAvatar}
+              isAnimated={this.isAnimated}
+            />
+            :
+            <Text>No active relation</Text>
+        }
 
-    );
+      </View>
+    )
   }
+
+  // end
 }
 
 const styles = StyleSheet.create({
@@ -125,7 +142,11 @@ const styles = StyleSheet.create({
 
 
 const mapStateToProps = state => {
-  return { activeUser: state.activeUser }
+  return {
+    activeUser: state.activeUser,
+    activeRelation: state.activeRelation
+  }
 };
 
-export default connect(mapStateToProps,null)(ChatsScreen);
+export default connect(mapStateToProps, null)(ChatsScreen);
+

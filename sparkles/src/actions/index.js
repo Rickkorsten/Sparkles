@@ -11,3 +11,10 @@ export const setAuthToken = (token) => {
         payload: token
     };
 }
+
+export const setActiveRelation = (token) => {
+    return {
+        type:'set_active_relation',
+        payload: token
+    };
+}
