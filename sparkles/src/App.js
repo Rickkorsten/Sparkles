@@ -15,12 +15,11 @@ import LottieView from 'lottie-react-native';
 import HomeScreen from './screens/HomeScreen/HomeScreen'
 import UserScreen from './screens/UserScreen/UserScreen'
 import ChatsScreen from './screens/ChatsScreen/ChatsScreen'
+import SparksScreen from './screens/SparksScreen/SparksScreen'
 
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import fontelloConfig from './config.json';
 const Icon = createIconSetFromFontello(fontelloConfig);
-
-
 
 const ChatsStack = createStackNavigator({
   Chats: { screen: ChatsScreen },
@@ -55,7 +54,7 @@ const Rootstack = createBottomTabNavigator(
     }
   },
   Chats: {
-    screen: ChatsStack,
+    screen: SparksScreen,
     navigationOptions: {
       tabBarLabel: 'Sparks',
       tabBarIcon: ({ tintColor }) => (
