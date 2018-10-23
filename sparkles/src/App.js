@@ -53,7 +53,7 @@ const Rootstack = createBottomTabNavigator(
         )
     }
   },
-  Chats: {
+  Sparks: {
     screen: SparksScreen,
     navigationOptions: {
       tabBarLabel: 'Sparks',
