@@ -51,11 +51,14 @@ class SparksScreen extends Component {
 
   renderActiveView = () => {
     return (
-      <TouchableOpacity onPress={this.goToChat} style={styles.sparkBlock}>
-        
-          <Text> </Text>
-          <Text style={styles.sparkName}>{}</Text>
-      </TouchableOpacity>
+      <View  style={styles.sparkBlock}> 
+        <Text>a </Text>
+        <Text>a </Text>
+        <Text>a </Text>
+        <Text>a </Text>
+        <Text>a </Text>
+        <Text style={styles.sparkName}>{}</Text>
+      </View>
     )
   }
 
@@ -70,15 +73,22 @@ class SparksScreen extends Component {
     }
 
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.logo}>Sparks</Text>
-        {content}
-        {this.renderActiveView()}
-        {this.renderActiveView()}
-        {this.renderActiveView()}
-        {this.renderActiveView()}
+      <View Style={styles.container}>
+        <ScrollView>
+            <Text style={styles.logo}>Sparks</Text>
+            { content = this.renderActiveView()}
+            { content = this.renderActiveView()}
+            { content = this.renderActiveView()}
+            { content = this.renderActiveView()}
+            { content = this.renderActiveView()}
+            { content = this.renderActiveView()}
+            { content = this.renderActiveView()}
+            { content = this.renderActiveView()}
+            { content = this.renderActiveView()}
+            { content = this.renderActiveView()}
 
-      </ScrollView>
+            </ScrollView>
+            </View>
     );
   }
 }
@@ -86,7 +96,6 @@ class SparksScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: 'white'
   },
   sparkContainer: {
@@ -96,11 +105,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   sparkBlock: {
-    width: '80%',
-    height: '80%',
+    width: '40%',
     backgroundColor: '#fff',
     borderRadius: 15,
-    justifyContent: 'space-between',
     alignItems: "center",
     overflow: 'hidden',
     ...Platform.select({
