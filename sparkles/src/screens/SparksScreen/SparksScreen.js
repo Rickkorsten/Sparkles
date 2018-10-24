@@ -27,14 +27,10 @@ class SparksScreen extends Component {
   }
 
   async componentDidMount() {
-    const { _id, status } = this.props.activeUser;
-    if (status == 'in_relation') {
-      this.getRelationUserId(_id)
-    }
-  }
-
-  goToChat = () => {
-    this.props.navigation.navigate('Chats');
+    const { _id } = this.props.activeUser;
+    axios.get(`https://sparklesapi.azurewebsites.net/relation/passed_relation/${_id}`).then(result => {
+      console.log(result)
+    })
   }
 
   renderNoSparksView = () => {
@@ -73,22 +69,9 @@ class SparksScreen extends Component {
     }
 
     return (
-      <View Style={styles.container}>
-        <ScrollView>
-            <Text style={styles.logo}>Sparks</Text>
-            { content = this.renderActiveView()}
-            { content = this.renderActiveView()}
-            { content = this.renderActiveView()}
-            { content = this.renderActiveView()}
-            { content = this.renderActiveView()}
-            { content = this.renderActiveView()}
-            { content = this.renderActiveView()}
-            { content = this.renderActiveView()}
-            { content = this.renderActiveView()}
-            { content = this.renderActiveView()}
-
-            </ScrollView>
-            </View>
+      <View style={styles.container}>
+        <Text style={styles.logo}>Sparks</Text>
+      </View>
     );
   }
 }
@@ -96,6 +79,8 @@ class SparksScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    //justifyContent: 'center',
     backgroundColor: 'white'
   },
   sparkContainer: {
@@ -130,7 +115,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   logo: {
-    marginBottom: 30,
+    marginTop: 35,
     fontFamily: 'Raleway-Light',
     fontSize: 32,
     textAlign: 'center'
